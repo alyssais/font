@@ -6,7 +6,7 @@ A command-line font manager.
 Installing
 ----------
 
-```
+```sh
 $ git clone https://github.com/alyssais/font.git
 $ cd font/
 $ rake
@@ -17,38 +17,56 @@ Usage
 
 ### Show all available fonts
 
-`$ font list`
+```sh
+$ font list
+```
 
 ### Show information for a particular font
 
-`$ font show "Droid Sans"`
+```sh
+$ font show "Droid Sans"
+```
 
 ### Preview a font in a web browser
 
-`$ font preview "Droid Sans"`
+```sh
+$ font preview "Droid Sans"
+```
 
 ### Install fonts
 
 Fonts will be installed at `~/Library/Fonts`, but this will soon be configurable.
 
-`$ font install "Droid Sans"`
+```sh
+$ font install "Droid Sans"
+```
 
 You can specify a variant (available variants are shown with `$ font show <name>`).
 
-`$ font install "Droid Sans" 700`
+```sh
+$ font install "Droid Sans" 700
+```
 
 You can also install all fonts. (May take a while).
 
-`$ font install all`
+```sh
+$ font install all
+```
 
 ### Uninstall fonts
 
-`$ font uninstall "Droid Sans"`
+```sh
+$ font uninstall "Droid Sans"
+```
 
 You can specify a variant (available variants are shown with `$ font show <name>`).
 
-`$ font uninstall "Droid Sans" 700`
+```sh
+$ font uninstall "Droid Sans" 700
+```
 
 You can also uninstall all fonts.
 
-`$ font uninstall all`
+```sh
+$ font uninstall all
+```
