@@ -21,6 +21,18 @@ Usage
 $ font list
 ```
 
+You can also show the fonts you currently have installed:
+
+```sh
+$ font list installed
+```
+
+Or fonts that are currently not installed.
+
+```sh
+$ font list not_installed
+```
+
 ### Show information for a particular font
 
 ```sh

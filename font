@@ -13,7 +13,7 @@ class String
     tr("-", "_").
     downcase
   end
-  
+
   def underscore!
     self.gsub!(/::/, '/').
     gsub!(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
@@ -25,7 +25,7 @@ end
 
 class Font
   FONT_LIST_URL = "https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyBsSKrux6m0tgiEnmy8r7_pjr0g3CAzo8E"
-  
+
   @kind
   @family
   @variants
@@ -33,21 +33,29 @@ class Font
   @version
   @last_modified
   @files
-  
+
   # Returns an Array with a Font object for every font in the repository.
   def self.all
     JSON.parse(open(FONT_LIST_URL).read)["items"].map { |hash| Font.new(hash) }
   end
-  
+
   # Returns the font with a given family name
   def self.find(family)
     all.find { |font| font.family == family }
   end
-  
+
+  def self.installed
+    all.find_all &:installed?
+  end
+
+  def self.not_installed
+    all.find_all { |font| !font.installed? }
+  end
+
   # The following method was taken from http://pullmonkey.com/2008/01/06/convert-a-ruby-hash-into-a-class-object/
   def initialize(hash)
     hash["lastModified"]
-        
+
     hash.each do |k,v|
       k = k.to_s.underscore
       self.instance_variable_set("@#{k}", v)  ## create and initialize an instance variable for this key/value pair
@@ -55,54 +63,54 @@ class Font
       self.class.send(:define_method, "#{k}=", proc{|v| self.instance_variable_set("@#{k}", v)})  ## create the setter that sets the instance variable
     end
   end
-  
+
   # Install a font
   # If no weight is specified, all will be installed.
-  def install(variants = [])    
+  def install(variants = [])
     variants = [*variants]
-    
+
     variants.each do |variant|
       puts "Installing #{@family} (#{variant.capitalize})."
-      
+
       url = @files[variant]
-      
+
       File.open(installed_file_path(variant), "wb") do |file|
         file.write open(url).read
       end
-      
+
       puts "#{@family} (#{variant.capitalize}) was successfully installed."
     end
-    
+
     install_all_variants if variants.empty?
   end
-  
+
   def install_all_variants
     @variants.each { |variant| install(variant) }
   end
-  
+
   def uninstall(variants = [])
     variants = [*variants]
-    
+
     variants.each do |variant|
       if installed?(variant)
-      
+
         puts "Uninstalling #{@family} (#{variant.capitalize})."
         path = installed_file_path(variant)
 
         File.delete(path) if File.exist?(path)
 
         puts "#{@family} (#{variant.capitalize}) was successfully uninstalled."
-      
+
       end
     end
-    
+
     uninstall_all_variants if variants.empty?
   end
-  
+
   def uninstall_all_variants
     @variants.each { |variant| uninstall(variant) }
   end
-  
+
   def installed?(variant = nil)
     if variant
       File.exist? installed_file_path(variant)
@@ -110,7 +118,7 @@ class Font
       any_variant_installed?
     end
   end
-  
+
   # Make a pretty display
   def display
     puts
@@ -126,52 +134,52 @@ class Font
     puts "Last modified: #{last_modified}"
     puts
   end
-  
+
   # Open a web browser to preview the font
   def preview
     Launchy.open "http://www.google.com/fonts/specimen/" + URI.encode(@family)
   end
 
   private
-  
+
   def any_variant_installed?
     @variants.each do |variant|
       return true if installed?(variant)
     end
-    
+
     return false
   end
-  
+
   def extension(variant = nil)
     url = variant ? @files[variant] : @files.first
     url.split(".").last
   end
-  
+
   def installed_file_name(variant)
     "#{@family}-#{@version}-#{variant.capitalize}.#{extension(variant)}"
   end
-  
+
   def installed_file_path(variant)
     File.expand_path("~/Library/Fonts/" + installed_file_name(variant))
   end
-  
+
   def display_heading(name)
     puts name.capitalize
     puts "=" * name.length
     puts
   end
-  
+
   def display_collection(name, &block)
     puts name.capitalize
     puts "-" * name.length
     collection = instance_variable_get("@#{name}")
-    
+
     if block_given?
       collection.each(&block)
     else
       collection.each { |item| puts "* #{item.capitalize}" }
     end
-    
+
     puts
   end
 end
@@ -192,7 +200,22 @@ when "uninstall"
     Font.find(ARGV[1]).uninstall(weights)
   end
 when "list"
-  Font.all.each { |font| puts font.family }
+  fonts = nil
+
+  case ARGV[1]
+  when "installed"
+    fonts = Font.installed
+  when "not_installed"
+    fonts = Font.not_installed
+  else
+    fonts = Font.all
+  end
+
+  if fonts.empty?
+    puts "No Google fonts are installed."
+  else
+    fonts.each { |font| puts font.family }
+  end
 when "show"
   Font.find(ARGV[1]).display
 when "preview"
