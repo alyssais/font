@@ -9,7 +9,7 @@ Installing
 ```sh
 $ git clone https://github.com/alyssais/font.git
 $ cd font/
-$ rake
+$ sudo rake # May not need to sudo, but it can't hurt.
 ```
 
 Usage
