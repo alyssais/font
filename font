@@ -1,7 +1,13 @@
 #!/usr/bin/env ruby
+require 'open-uri'
+require 'json'
+
 case ARGV[0]
 when "install"
   STDOUT.puts "installing #{ARGV[1]}"
 when "uninstall"
   STDOUT.puts "uninstalling #{ARGV[1]}"
+when "list"
+  list = JSON.parse open("https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyBsSKrux6m0tgiEnmy8r7_pjr0g3CAzo8E").read
+  list["items"].each { |font| puts font["family"] }
 end
