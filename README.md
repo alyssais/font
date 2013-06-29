@@ -7,7 +7,7 @@ Installing
 ----------
 
 ```
-$ git clone ttps://github.com/rosspenman/font.git
+$ git clone https://github.com/rosspenman/font.git
 $ cd font/
 $ rake
 ```
