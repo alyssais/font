@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'open-uri'
 require 'json'
+require 'launchy'
 
 class String
   # Convert CamelCase to under_scores.
@@ -125,6 +126,11 @@ class Font
     puts "Last modified: #{last_modified}"
     puts
   end
+  
+  # Open a web browser to preview the font
+  def preview
+    Launchy.open "http://www.google.com/fonts/specimen/" + URI.encode(@family)
+  end
 
   private
   
@@ -189,4 +195,6 @@ when "list"
   Font.all["items"].each { |font| puts font["family"] }
 when "show"
   Font.find(ARGV[1]).display
+when "preview"
+  Font.find(ARGV[1]).preview
 end
