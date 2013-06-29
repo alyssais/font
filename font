@@ -2,6 +2,7 @@
 require 'open-uri'
 require 'json'
 require 'erb'
+require 'pry'
 
 class String
   # Convert CamelCase to under_scores.
@@ -56,35 +57,71 @@ class Font
     end
   end
   
+  # Install a font
+  # If no weight is specified, all will be installed.
+  def install(variants = [])    
+    variants = [*variants]
+    
+    variants.each do |variant|
+      url = @files[variant]
+      ext = url.split('.').last
+      
+      File.open(installed_file_path(variant, ext), "wb") do |file|
+        file.write open(url).read
+      end
+    end
+    
+    install_all_variants if variants.empty?
+  end
+  
+  def install_all_variants
+    @variants.each { |variant| install(variant) }
+  end
+  
   # Make a pretty display
   def display
-    p
-    p family
-    p "=" * family.length
-    p
+    puts
+    display_heading family
     display_collection :variants
     display_collection :subsets
-    p "Last modified: #{last_modified}"
-    p
+    puts "Last modified: #{last_modified}"
+    puts
   end
 
   private
   
+  def installed_file_name(variant, extension)
+    "#{@family}-#{@version}-#{variant.capitalize}.#{extension}"
+  end
+  
+  def installed_file_path(variant, extension)
+    "/Users/alyssais/Library/Fonts/" + installed_file_name(variant, extension)
+  end
+  
+  def display_heading(name)
+    puts name.capitalize
+    puts "=" * name.length
+    puts
+  end
+  
   def display_collection(name)
-    p name.titleize
-    p "-" * name.length
-    instance_variable_get("@#{name}").each { |item| p "* #{item.capitalize}" }
-    p
+    puts name.capitalize
+    puts "-" * name.length
+    instance_variable_get("@#{name}").each { |item| puts "* #{item.capitalize}" }
+    puts
   end
 end
 
 case ARGV[0]
 when "install"
-  p "installing #{ARGV[1]}"
+  puts "Installing #{ARGV[1]}"
+  weights = ARGV[2..-1].map &:downcase
+  Font.find(ARGV[1]).install(weights)
+  puts "#{ARGV[1]} was successfully installed."
 when "uninstall"
-  p "uninstalling #{ARGV[1]}"
+  puts "uninstalling #{ARGV[1]}"
 when "list"
-  Font.list["items"].each { |font| p font["family"] }
+  Font.list["items"].each { |font| puts font["family"] }
 when "show"
   Font.find(ARGV[1]).display
 end
