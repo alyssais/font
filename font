@@ -192,7 +192,7 @@ when "uninstall"
     Font.find(ARGV[1]).uninstall(weights)
   end
 when "list"
-  Font.all["items"].each { |font| puts font["family"] }
+  Font.all.each { |font| puts font.family }
 when "show"
   Font.find(ARGV[1]).display
 when "preview"
