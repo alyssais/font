@@ -47,7 +47,9 @@ $ font preview "Droid Sans"
 
 ### Install fonts
 
-Fonts will be installed at `~/Library/Fonts`, but this will soon be configurable.
+Fonts will be installed at `~/Library/Fonts` by default, but this can be changed by setting the `FONT_PATH` environment variable.
+
+The default font path is compatible with OS X.
 
 ```sh
 $ font install "Droid Sans"
