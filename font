@@ -2,6 +2,7 @@
 require 'open-uri'
 require 'json'
 require 'launchy'
+require 'rainbow'
 
 class String
   # Convert CamelCase to under_scores.
@@ -125,8 +126,8 @@ class Font
     display_heading family
 
     display_collection :variants do |variant|
-       print "* #{variant.capitalize}"
-       print " (installed)" if installed?(variant)
+       print "#{"*".color(:white)} #{variant.capitalize}"
+       print " (installed)".color(:green) if installed?(variant)
        puts
     end
 
@@ -164,20 +165,20 @@ class Font
   end
 
   def display_heading(name)
-    puts name
+    puts name.color(:white)
     puts "=" * name.length
     puts
   end
 
   def display_collection(name, &block)
-    puts name.capitalize
+    puts name.to_s.capitalize.color(:white)
     puts "-" * name.length
     collection = instance_variable_get("@#{name}")
 
     if block_given?
       collection.each(&block)
     else
-      collection.each { |item| puts "* #{item.capitalize}" }
+      collection.each { |item| puts "#{"*".color(:white)} #{item.capitalize}" }
     end
 
     puts
