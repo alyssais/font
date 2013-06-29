@@ -69,15 +69,19 @@ class Font
     variants = [*variants]
 
     variants.each do |variant|
-      puts "Installing #{@family} (#{variant.capitalize})."
+      unless installed?(variant)
 
-      url = @files[variant]
+        puts "Installing #{@family} (#{variant.capitalize})."
 
-      File.open(installed_file_path(variant), "wb") do |file|
-        file.write open(url).read
+        url = @files[variant]
+
+        File.open(installed_file_path(variant), "wb") do |file|
+          file.write open(url).read
+        end
+
+        puts "#{@family} (#{variant.capitalize}) was successfully installed."
+
       end
-
-      puts "#{@family} (#{variant.capitalize}) was successfully installed."
     end
 
     install_all_variants if variants.empty?
