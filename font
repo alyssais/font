@@ -1,6 +1,82 @@
 #!/usr/bin/env ruby
 require 'open-uri'
 require 'json'
+require 'erb'
+
+class String
+  # Convert CamelCase to under_scores.
+  # Stolen from ActiveSupport
+  def underscore
+    self.gsub(/::/, '/').
+    gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+    gsub(/([a-z\d])([A-Z])/,'\1_\2').
+    tr("-", "_").
+    downcase
+  end
+  
+  def underscore!
+    self.gsub!(/::/, '/').
+    gsub!(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+    gsub!(/([a-z\d])([A-Z])/,'\1_\2').
+    tr!("-", "_").
+    downcase!
+  end
+end
+
+class Font
+  FONT_LIST_URL = "https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyBsSKrux6m0tgiEnmy8r7_pjr0g3CAzo8E"
+  
+  @kind
+  @family
+  @variants
+  @subsets
+  @version
+  @last_modified
+  @files
+  
+  # Returns an Array with a Font object for every font in the repository.
+  def self.list
+    JSON.parse(open(FONT_LIST_URL).read)["items"].map { |hash| Font.new(hash) }
+  end
+  
+  # Returns the font with a given family name
+  def self.find(family)
+    list.find { |font| font.family == family }
+  end
+  
+  # The following method was taken from http://pullmonkey.com/2008/01/06/convert-a-ruby-hash-into-a-class-object/
+  def initialize(hash)
+    hash["lastModified"]
+        
+    hash.each do |k,v|
+      k = k.to_s.underscore
+      self.instance_variable_set("@#{k}", v)  ## create and initialize an instance variable for this key/value pair
+      self.class.send(:define_method, k, proc{self.instance_variable_get("@#{k}")})  ## create the getter that returns the instance variable
+      self.class.send(:define_method, "#{k}=", proc{|v| self.instance_variable_set("@#{k}", v)})  ## create the setter that sets the instance variable
+    end
+  end
+  
+  # Make a pretty display
+  def display
+    puts
+    puts family
+    puts "=" * family.length
+    puts
+    display_collection :variants
+    display_collection :subsets
+    puts "Last modified: #{last_modified}"
+    puts
+  end
+
+  private
+  
+  def display_collection(name)
+    puts name.capitalize
+    puts "-" * name.length
+    instance_variable_get("@#{name}").each { |item| puts "* #{item.capitalize}" }
+    puts
+  end
+end
 
 case ARGV[0]
 when "install"
@@ -8,6 +84,7 @@ when "install"
 when "uninstall"
   STDOUT.puts "uninstalling #{ARGV[1]}"
 when "list"
-  list = JSON.parse open("https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyBsSKrux6m0tgiEnmy8r7_pjr0g3CAzo8E").read
-  list["items"].each { |font| puts font["family"] }
+  Font.list["items"].each { |font| puts font["family"] }
+when "show"
+  Font.find(ARGV[1]).display
 end
