@@ -41,7 +41,7 @@ class Font
 
   # Returns the font with a given family name
   def self.find(family)
-    all.find { |font| font.family == family }
+    all.find { |font| font.family.downcase == family.downcase }
   end
 
   def self.installed
@@ -126,7 +126,7 @@ class Font
 
     display_collection :variants do |variant|
        print "* #{variant.capitalize}"
-       print " ✔" if installed?(variant)
+       print " (installed)" if installed?(variant)
        puts
     end
 
@@ -164,7 +164,7 @@ class Font
   end
 
   def display_heading(name)
-    puts name.capitalize
+    puts name
     puts "=" * name.length
     puts
   end
