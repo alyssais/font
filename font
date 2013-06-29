@@ -202,6 +202,7 @@ when "uninstall"
   end
 when "list"
   fonts = nil
+  show_installed = false
 
   case ARGV[1]
   when "installed"
@@ -209,13 +210,18 @@ when "list"
   when "not_installed"
     fonts = Font.not_installed
   else
+    show_installed = true
     fonts = Font.all
   end
 
   if fonts.empty?
     puts "No Google fonts are installed."
   else
-    fonts.each { |font| puts font.family }
+    fonts.each do |font|
+      print font.family
+      print " (installed)".color(:green) if show_installed && font.installed?
+      puts
+    end
   end
 when "show"
   Font.find(ARGV[1]).display
