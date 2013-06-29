@@ -113,7 +113,7 @@ class Font
   end
   
   def installed_file_path(variant)
-    "/Users/alyssais/Library/Fonts/" + installed_file_name(variant)
+    File.expand_path("~/Library/Fonts/" + installed_file_name(variant))
   end
   
   def display_heading(name)
