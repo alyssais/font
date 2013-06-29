@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+case ARGV[0]
+when "install"
+  STDOUT.puts "installing #{ARGV[1]}"
+when "uninstall"
+  STDOUT.puts "uninstalling #{ARGV[1]}"
+end
