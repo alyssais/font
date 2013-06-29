@@ -7,7 +7,7 @@ Installing
 ----------
 
 ```
-$ git clone ttps://github.com/alyssais/font.git
+$ git clone https://github.com/alyssais/font.git
 $ cd font/
 $ bundle
 ```
