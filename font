@@ -91,17 +91,39 @@ class Font
     @variants.each { |variant| uninstall(variant) }
   end
   
+  def installed?(variant = nil)
+    if variant
+      File.exist? installed_file_path(variant)
+    else
+      any_variant_installed?
+    end
+  end
+  
   # Make a pretty display
   def display
     puts
     display_heading family
-    display_collection :variants
+    
+    display_collection :variants do |variant|
+       print "* #{variant.capitalize}"
+       print " ✔" if installed?(variant)
+       puts
+    end
+     
     display_collection :subsets
     puts "Last modified: #{last_modified}"
     puts
   end
 
   private
+  
+  def any_variant_installed?
+    @variants.each do |variant|
+      return true if installed?(variant)
+    end
+    
+    return false
+  end
   
   def extension(variant = nil)
     url = variant ? @files[variant] : @files.first
@@ -122,10 +144,17 @@ class Font
     puts
   end
   
-  def display_collection(name)
+  def display_collection(name, &block)
     puts name.capitalize
     puts "-" * name.length
-    instance_variable_get("@#{name}").each { |item| puts "* #{item.capitalize}" }
+    collection = instance_variable_get("@#{name}")
+    
+    if block_given?
+      collection.each(&block)
+    else
+      collection.each { |item| puts "* #{item.capitalize}" }
+    end
+    
     puts
   end
 end
