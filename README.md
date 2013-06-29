@@ -32,5 +32,5 @@ You can also install all fonts. (May take a while).
 You can specify a variant (available variants are shown with `$ ./font show <name>`.
 `$ ./font uninstall "Droid Sans" 700`
 
-You can also install all fonts.
+You can also uninstall all fonts.
 `$ ./font uninstall all`
