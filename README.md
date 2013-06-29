@@ -3,6 +3,14 @@ font
 
 A command-line font manager.
 
+Installing
+----------
+
+```
+$ git clone ttps://github.com/rosspenman/font.git
+$ cd font/
+```
+
 Usage
 -----
 
