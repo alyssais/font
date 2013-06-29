@@ -34,13 +34,13 @@ class Font
   @files
   
   # Returns an Array with a Font object for every font in the repository.
-  def self.list
+  def self.all
     JSON.parse(open(FONT_LIST_URL).read)["items"].map { |hash| Font.new(hash) }
   end
   
   # Returns the font with a given family name
   def self.find(family)
-    list.find { |font| font.family == family }
+    all.find { |font| font.family == family }
   end
   
   # The following method was taken from http://pullmonkey.com/2008/01/06/convert-a-ruby-hash-into-a-class-object/
@@ -61,7 +61,7 @@ class Font
     variants = [*variants]
     
     variants.each do |variant|
-      puts "Installing #{@family} (#{variant})."
+      puts "Installing #{@family} (#{variant.capitalize})."
       
       url = @files[variant]
       
@@ -69,7 +69,7 @@ class Font
         file.write open(url).read
       end
       
-      puts "#{@family} (#{variant}) was successfully installed."
+      puts "#{@family} (#{variant.capitalize}) was successfully installed."
     end
     
     install_all_variants if variants.empty?
@@ -83,11 +83,16 @@ class Font
     variants = [*variants]
     
     variants.each do |variant|
-      puts "Uninstalling #{@family} (#{variant})."
+      if installed?(variant)
+      
+        puts "Uninstalling #{@family} (#{variant.capitalize})."
+        path = installed_file_path(variant)
 
-      File.delete(installed_file_path(variant))
+        File.delete(path) if File.exist?(path)
 
-      puts "#{@family} (#{variant}) was successfully uninstalled."
+        puts "#{@family} (#{variant.capitalize}) was successfully uninstalled."
+      
+      end
     end
     
     uninstall_all_variants if variants.empty?
@@ -168,16 +173,20 @@ end
 case ARGV[0]
 when "install"
   if ARGV[1] == "all"
-    Font.list.each &:install
+    Font.all.each &:install
   else
     weights = ARGV[2..-1].map &:downcase
     Font.find(ARGV[1]).install(weights)
   end
 when "uninstall"
-  weights = ARGV[2..-1].map &:downcase
-  Font.find(ARGV[1]).uninstall(weights)
+  if ARGV[1] == "all"
+    Font.all.each &:uninstall
+  else
+    weights = ARGV[2..-1].map &:downcase
+    Font.find(ARGV[1]).uninstall(weights)
+  end
 when "list"
-  Font.list["items"].each { |font| puts font["family"] }
+  Font.all["items"].each { |font| puts font["family"] }
 when "show"
   Font.find(ARGV[1]).display
 end
