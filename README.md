@@ -23,6 +23,10 @@ Usage
 
 `$ ./font show "Droid Sans"`
 
+### Preview a font in a web browser
+
+`$ ./font preview "Droid Sans"`
+
 ### Install fonts
 
 Fonts will be installed at `~/Library/Fonts`, but this will soon be configurable.
