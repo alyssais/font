@@ -58,33 +58,33 @@ class Font
   
   # Make a pretty display
   def display
-    puts
-    puts family
-    puts "=" * family.length
-    puts
+    p
+    p family
+    p "=" * family.length
+    p
     display_collection :variants
     display_collection :subsets
-    puts "Last modified: #{last_modified}"
-    puts
+    p "Last modified: #{last_modified}"
+    p
   end
 
   private
   
   def display_collection(name)
-    puts name.capitalize
-    puts "-" * name.length
-    instance_variable_get("@#{name}").each { |item| puts "* #{item.capitalize}" }
-    puts
+    p name.titleize
+    p "-" * name.length
+    instance_variable_get("@#{name}").each { |item| p "* #{item.capitalize}" }
+    p
   end
 end
 
 case ARGV[0]
 when "install"
-  STDOUT.puts "installing #{ARGV[1]}"
+  p "installing #{ARGV[1]}"
 when "uninstall"
-  STDOUT.puts "uninstalling #{ARGV[1]}"
+  p "uninstalling #{ARGV[1]}"
 when "list"
-  Font.list["items"].each { |font| puts font["family"] }
+  Font.list["items"].each { |font| p font["family"] }
 when "show"
   Font.find(ARGV[1]).display
 end
