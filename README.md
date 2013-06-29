@@ -1,8 +1,7 @@
 font
 ====
 
-A command-line font manager
-Fonts will be installed at `~/Library/Fonts`, but this will soon be configurable.
+A command-line font manager.
 
 Usage
 -----
@@ -17,9 +16,11 @@ Usage
 
 ### Install fonts
 
+Fonts will be installed at `~/Library/Fonts`, but this will soon be configurable.
+
 `$ ./font install "Droid Sans"`
 
-You can specify a variant (available variants are shown with `$ ./font show <name>`.
+You can specify a variant (available variants are shown with `$ ./font show <name>`).
 
 `$ ./font install "Droid Sans" 700`
 
@@ -31,7 +32,7 @@ You can also install all fonts. (May take a while).
 
 `$ ./font uninstall "Droid Sans"`
 
-You can specify a variant (available variants are shown with `$ ./font show <name>`.
+You can specify a variant (available variants are shown with `$ ./font show <name>`).
 
 `$ ./font uninstall "Droid Sans" 700`
 
