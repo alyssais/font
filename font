@@ -61,11 +61,15 @@ class Font
     variants = [*variants]
     
     variants.each do |variant|
+      puts "Installing #{@family} (#{variant})."
+      
       url = @files[variant]
       
       File.open(installed_file_path(variant), "wb") do |file|
         file.write open(url).read
       end
+      
+      puts "#{@family} (#{variant}) was successfully installed."
     end
     
     install_all_variants if variants.empty?
@@ -79,7 +83,11 @@ class Font
     variants = [*variants]
     
     variants.each do |variant|
+      puts "Uninstalling #{@family} (#{variant})."
+
       File.delete(installed_file_path(variant))
+
+      puts "#{@family} (#{variant}) was successfully uninstalled."
     end
     
     uninstall_all_variants if variants.empty?
@@ -101,13 +109,13 @@ class Font
   def display
     puts
     display_heading family
-    
+
     display_collection :variants do |variant|
        print "* #{variant.capitalize}"
        print " ✔" if installed?(variant)
        puts
     end
-     
+
     display_collection :subsets
     puts "Last modified: #{last_modified}"
     puts
@@ -159,15 +167,15 @@ end
 
 case ARGV[0]
 when "install"
-  puts "Installing #{ARGV[1]}"
-  weights = ARGV[2..-1].map &:downcase
-  Font.find(ARGV[1]).install(weights)
-  puts "#{ARGV[1]} was successfully installed."
+  if ARGV[1] == "all"
+    Font.list.each &:install
+  else
+    weights = ARGV[2..-1].map &:downcase
+    Font.find(ARGV[1]).install(weights)
+  end
 when "uninstall"
-  puts "uninstalling #{ARGV[1]}"
   weights = ARGV[2..-1].map &:downcase
   Font.find(ARGV[1]).uninstall(weights)
-  puts "#{ARGV[1]} was successfully uninstalled."
 when "list"
   Font.list["items"].each { |font| puts font["family"] }
 when "show"
