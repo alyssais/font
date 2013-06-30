@@ -153,13 +153,14 @@ class Font
     return false
   end
 
+  # Returns the extenstion, including a leading .
   def extension(variant = nil)
     url = variant ? @files[variant] : @files.first
-    url.split(".").last
+    File.extname(URI.parse(url).path)
   end
 
   def installed_file_name(variant)
-    "#{@family}-#{@version}-#{variant.capitalize}.#{extension(variant)}"
+    "#{@family}-#{@version}-#{variant.capitalize}#{extension(variant)}"
   end
 
   def installed_file_path(variant)
