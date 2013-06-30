@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'rubygems'
 require 'open-uri'
 require 'json'
 require 'launchy'
@@ -174,7 +175,8 @@ class Font
   end
 
   def display_collection(name, &block)
-    puts name.to_s.capitalize.color(:white)
+    name = name.to_s # could be a symbol.
+    puts name.capitalize.color(:white)
     puts "-" * name.length
     collection = instance_variable_get("@#{name}")
 
