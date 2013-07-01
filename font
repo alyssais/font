@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
+
+$VERSION = '1.0'
+
 require 'rubygems'
 require 'open-uri'
 require 'json'
@@ -232,4 +235,6 @@ when "show"
   Font.find(ARGV[1]).display
 when "preview"
   Font.find(ARGV[1]).preview
+when "-v", "--version"
+  puts $VERSION
 end
