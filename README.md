@@ -12,6 +12,13 @@ $ cd font/
 $ sudo rake # May not need to sudo, but it can't hurt.
 ```
 
+Uninstalling
+------------
+
+```sh
+$ rake uninstall
+```
+
 Usage
 -----
 
