@@ -3,5 +3,10 @@ task :default => [:install]
 task :install do |t|
   `gem install bundler`
   `bundle`
-  `cp font /usr/local/bin/font`
+  
+  if ENV['PREFIX']
+    `cp font $PREFIX/font`
+  else
+    `cp font /usr/local/bin/font`
+  end
 end
