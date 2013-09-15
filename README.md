@@ -1,7 +1,7 @@
 font
 ====
 
-A command-line font manager.
+A command-line font manager for Google Web Fonts.
 
 Installing
 ----------
